@@ -1,6 +1,6 @@
 # docgraf
 
-Publish annotations to Grafana based on Docker Events.
+Publish annotations to Grafana based on Docker Events. Checkout [the docs](https://philosowaffle.github.io/docgraf/).
 
 ## Donate
 
