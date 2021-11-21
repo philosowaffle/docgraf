@@ -59,6 +59,8 @@ internal class Startup : BackgroundService
         {
             _dockerClient.BeginEventMonitoringAsync();
 
+            while (!cancelToken.IsCancellationRequested) { }
+
             return Task.CompletedTask;
 
         } catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using Common.Observability;
+﻿using Common.Grafana;
+using Common.Observability;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Serilog;
@@ -17,12 +18,15 @@ public class DockerClient : IDockerClientWrapper
     private static readonly ILogger _logger = LogContext.ForClass<DockerClient>();
 
     private readonly DockerDotNet.DockerClient _client;
+    private readonly IGrafanaClient _grafanaClient;
 
-    public DockerClient(IAppConfiguration config)
+    public DockerClient(IAppConfiguration config, IGrafanaClient grafanaClient)
     {
         var host = config.Docker.Host ?? "localhost:4243";
         _client = new DockerClientConfiguration(new Uri($"http://{host}"))
                                     .CreateClient();
+
+        _grafanaClient = grafanaClient;
     }
 
     public Task BeginEventMonitoringAsync()
@@ -60,6 +64,7 @@ public class DockerClient : IDockerClientWrapper
         if (message.Action == "start"
             || message.Action == "stop"
             || message.Action == "restart")
-            return; // TODO: write to grafana
+            _grafanaClient.CreateAnnotationAsync(message.Time, "Docker event", message.Action, message.From)
+                .GetAwaiter().GetResult();
     }
 }

@@ -25,13 +25,15 @@ public static class FlurlConfiguration
 	{
 		Func<FlurlCall, Task> beforeCallAsync = (FlurlCall call) =>
 		{
-			Log.Verbose("HTTP Request: {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", call.HttpRequestMessage.Method, call.HttpRequestMessage.RequestUri, call.HttpRequestMessage.Headers.ToString(), call.HttpRequestMessage.Content);
+			Log.Verbose("HTTP Request: {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", 
+				call.HttpRequestMessage.Method, call.HttpRequestMessage.RequestUri, call.HttpRequestMessage.Headers.ToString(), call.HttpRequestMessage.Content);
 			return Task.CompletedTask;
 		};
 
 		Func<FlurlCall, Task> afterCallAsync = async (FlurlCall call) =>
 		{
-			Log.Verbose("HTTP Response: {@HttpStatusCode} - {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", call.HttpResponseMessage?.StatusCode, call.HttpRequestMessage?.Method, call.HttpRequestMessage?.RequestUri, call.HttpResponseMessage?.Headers.ToString(), await call.HttpResponseMessage?.Content?.ReadAsStringAsync() ?? "null");
+			Log.Verbose("HTTP Response: {@HttpStatusCode} - {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", 
+				call.HttpResponseMessage?.StatusCode, call.HttpRequestMessage?.Method?.ToString() ?? "null", call.HttpRequestMessage?.RequestUri?.ToString() ?? "null", call.HttpResponseMessage?.Headers.ToString() ?? "null", await call.HttpResponseMessage?.Content?.ReadAsStringAsync() ?? "null");
 
 			if (config.Observability.Prometheus.Enabled)
 			{

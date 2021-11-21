@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Common;
 using Common.Docker;
+using Common.Grafana;
 using Common.Http;
 using Console;
 using Microsoft.Extensions.Configuration;
@@ -59,6 +60,7 @@ static IHostBuilder CreateHostBuilder(string[] args)
 			});
 
 			services.AddSingleton<IDockerClientWrapper, DockerClient>();
+			services.AddSingleton<IGrafanaClient, GrafanaClient>();
 
 			services.AddHostedService<Startup>();
 		});
