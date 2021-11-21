@@ -5,6 +5,7 @@ namespace Common;
 public interface IAppConfiguration
 {
 	App App { get; set; }
+	DockerConfig Docker { get; set; }
 
 	ObservabilityConfig Observability { get; set; }
 	Developer Developer { get; set; }
@@ -15,6 +16,7 @@ public static class ConfigurationSetup
 	public static void LoadConfigValues(IConfiguration provider, IAppConfiguration config)
 	{
 		provider.GetSection(nameof(App)).Bind(config.App);
+		provider.GetSection(nameof(Docker)).Bind(config.Docker);
 		provider.GetSection("Observability").Bind(config.Observability);
 		provider.GetSection(nameof(Developer)).Bind(config.Developer);
 	}
@@ -25,11 +27,13 @@ public class Configuration : IAppConfiguration
 	public Configuration()
 	{
 		App = new App();
+		Docker = new DockerConfig();
 		Observability = new ObservabilityConfig();
 		Developer = new Developer();
 	}
 
 	public App App { get; set; }
+	public DockerConfig Docker { get; set; }
 
 	public ObservabilityConfig Observability { get; set; }
 	public Developer Developer { get; set; }
@@ -40,6 +44,11 @@ public class App
 	public App()
 	{
 	}
+}
+
+public class DockerConfig
+{
+	public string? Host { get; set; }
 }
 
 public class ObservabilityConfig

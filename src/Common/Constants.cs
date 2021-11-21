@@ -2,5 +2,5 @@
 
 public static class Constants
 {
-    public const string AppName = "AppName";
+    public const string AppName = "DocGraf";
 }

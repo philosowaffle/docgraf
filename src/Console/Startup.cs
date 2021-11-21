@@ -1,7 +1,7 @@
 ﻿using Common;
+using Common.Docker;
 using Common.Http;
 using Common.Observability;
-using Flurl.Http;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
 using Serilog;
@@ -20,10 +20,13 @@ internal class Startup : BackgroundService
     });
 
     private IAppConfiguration _config;
+    private IDockerClientWrapper _dockerClient;
 
-    public Startup(IAppConfiguration configuration)
+    public Startup(IAppConfiguration configuration, IDockerClientWrapper dockerClient)
     {
         _config = configuration;
+        _dockerClient = dockerClient;
+
         FlurlConfiguration.Configure(_config);
 
         var runtimeVersion = Environment.Version.ToString();
@@ -45,38 +48,27 @@ internal class Startup : BackgroundService
         return RunAsync(cancelToken);
     }
 
-    private async Task RunAsync(CancellationToken cancelToken)
+    private Task RunAsync(CancellationToken cancelToken)
     {
         using var metrics = Metrics.EnableMetricsServer(_config.Observability.Prometheus);
         using var metricsCollector = Metrics.EnableCollector(_config.Observability.Prometheus);
         using var tracing = Common.Observability.Tracing.EnableTracing(_config.Observability.Tracing);
         using var tracingSource = new ActivitySource("ROOT");
 
-        while (!cancelToken.IsCancellationRequested)
+        try
         {
-            DoSomething();
+            _dockerClient.BeginEventMonitoringAsync();
 
-            for (int i = 1; i < 30; i++)
-            {
-                Thread.Sleep(1000);
-                if (cancelToken.IsCancellationRequested) break;
-            }
+            return Task.CompletedTask;
+
+        } catch (Exception ex)
+        {
+            _logger.Fatal(ex, "RunAsync failed.");
+            return Task.CompletedTask;
+
+        } finally
+        {
+            _logger.Verbose("End.");
         }
-
-        _logger.Verbose("End.");
-    }
-
-    private async void DoSomething()
-    {
-        using var tracing = Common.Observability.Tracing.Trace($"{nameof(Startup)}.{nameof(DoSomething)}");
-
-        await CallApiAsync();
-    }
-
-    private Task CallApiAsync()
-    {
-        using var tracing = Common.Observability.Tracing.Trace($"{nameof(Startup)}.{nameof(CallApiAsync)}");
-
-        return "https://catfact.ninja/fact".GetJsonAsync();
     }
 }

@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Common;
+using Common.Docker;
 using Common.Http;
 using Console;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Primitives;
 using Serilog;
 using Serilog.Enrichers.Span;
 
-System.Console.WriteLine("Hello, World!");
+System.Console.WriteLine("Welcome! DocGraf is starting up...");
 
 using IHost host = CreateHostBuilder(args).Build();
 host.RunAsync();
@@ -56,6 +57,8 @@ static IHostBuilder CreateHostBuilder(string[] args)
 
 				return config;
 			});
+
+			services.AddSingleton<IDockerClientWrapper, DockerClient>();
 
 			services.AddHostedService<Startup>();
 		});

@@ -1,5 +1,9 @@
 {
-  "App": { },
+  "App": {},
+
+  "Docker": {
+    "Host": "docker-proxy:2375"
+  },
 
   "Observability": {
 
