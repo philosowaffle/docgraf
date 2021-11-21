@@ -1,0 +1,32 @@
+{
+  "App": { },
+
+  "Observability": {
+
+    "Prometheus": {
+      "Enabled": false,
+      "Port": 4000
+    },
+
+    "Tracing": {
+      "Enabled": true,
+      "Url": "http://localhost:4317"
+    },
+
+    "Serilog": {
+      "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+      "MinimumLevel": "Information",
+      "WriteTo": [
+        { "Name": "Console" },
+        {
+          "Name": "File",
+          "Args": {
+            "path": "./output/log.txt",
+            "rollingInterval": "Day",
+            "retainedFileCountLimit": 7
+          }
+        }
+      ]
+    }
+  }
+}

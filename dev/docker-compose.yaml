@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  newapp:
+    container_name: newapp
+    build: ../Dockerfile
+    ports:
+      - 4000:4000 # metrics
+    environment:
+      - TZ=America/Chicago
+      - VERSION=1.0.0
+    volumes:
+      - ./src/Console/configuration.local.json:/app/configuration.local.json

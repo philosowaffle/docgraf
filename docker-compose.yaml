@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  newapp:
+    image: philosowaffle/newapp
+    container_name: newapp
+    ports:
+      - 4000:4000 # metrics
+    environment:
+      - TZ=America/Chicago
+    volumes:
+      - ./configuration.local.json:/app/configuration.local.json
