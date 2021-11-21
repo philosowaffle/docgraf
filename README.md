@@ -1,4 +1,6 @@
-# DocGraf
+# docgraf
+
+Publish annotations to Grafana based on Docker Events.
 
 ## Donate
 

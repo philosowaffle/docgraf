@@ -6,18 +6,12 @@ nav_order: 0
 
 # Home
 
-Convert workout data from Peloton into a format that can be uploaded to Garmin.
+Publish annotations to Grafana based on Docker Events.
 
-* Fetch latest workouts from Peloton
-* Convert Peloton workout to a variety of formats
-* Upload TCX or FIT workout to Garmin
-* Avoid duplicates in Garmin
-* Backup your downloaded data and converted files
-* Earn Badges and credit for Garmin Challenges
+* Configure which events should create an Annotation
+* Events are tagged with Container, Event, and Type for easy filtering
 
 Head on over to the [Install]({{ site.baseurl }}{% link install/index.md %}) page to get started!
-
-![Example Cycling Workout](https://github.com/philosowaffle/peloton-to-garmin/blob/master/images/example_cycle.png?raw=true "Example Cycling Workout")
 
 ## Supported Platforms
 
@@ -28,4 +22,4 @@ Head on over to the [Install]({{ site.baseurl }}{% link install/index.md %}) pag
 
 ## Contributors
 
-Special thanks to all the [contributors](https://github.com/philosowaffle/peloton-to-garmin/graphs/contributors) who have helped improve this project!
+Special thanks to all the [contributors](https://github.com/philosowaffle/docgraf/graphs/contributors) who have helped improve this project!

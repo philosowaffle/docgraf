@@ -6,34 +6,34 @@ namespace Common.Grafana;
 
 public interface IGrafanaClient
 {
-    Task CreateAnnotationAsync(long time, string message, string action, string container);
+    Task CreateAnnotationAsync(long time, string message, string type, string action, string container);
 }
 
 public class GrafanaClient : IGrafanaClient
 {
     private static readonly ILogger _logger = LogContext.ForClass<GrafanaClient>();
 
-    private readonly string Host;
+    private readonly string Uri;
     private readonly string ApiKey;
 
     public GrafanaClient(IAppConfiguration configuration)
     {
-        Host = configuration.Grafana.Host ?? "localhost:3000";
-        ApiKey = configuration.Grafana.ApiKey ?? string.Empty;
+        Uri = configuration.Grafana.Uri;
+        ApiKey = configuration.Grafana.ApiKey;
     }
 
-    public Task CreateAnnotationAsync(long time, string message, string action, string container)
+    public Task CreateAnnotationAsync(long nanoSinceEpoch, string message, string type, string action, string container)
     {
         using var tracing = Observability.Tracing.Trace($"{nameof(GrafanaClient)}.{nameof(CreateAnnotationAsync)}");
 
         var request = new PostAnnotationRequest()
         {
-            Time = time * 1000, // seconds epoch to milliseconds epoch
+            Time = nanoSinceEpoch / 1_000_000, // nano epoch to milliseconds epoch
             Text = message,
-             Tags = new string[] { action, container }
+             Tags = new string[] { type, action, container }
         };
 
-        return $"{Host}/api/annotations"
+        return $"{Uri}/api/annotations"
                 .WithOAuthBearerToken(ApiKey)
                 .PostJsonAsync(request);
     }

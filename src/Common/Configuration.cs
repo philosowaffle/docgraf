@@ -52,13 +52,45 @@ public class App
 
 public class DockerConfig
 {
-	public string? Host { get; set; }
+	public DockerConfig()
+    {
+		Uri = "http://localhost:4243";
+		ContainerEvents = new string[] { "start", "stop", "restart" };
+		ImageEvents = new string[] { };
+		PluginEvents = new string[] { };
+		VolumeEvents = new string[] { };
+		DaemonEvents = new string[] { };
+		ServiceEvents = new string[] { };
+		NodeEvents = new string[] { };
+		SecretEvents = new string[] { };
+		ConfigEvents = new string[] { };
+    }
+
+	public string Uri { get; set; }
+	/// <summary>
+	/// https://docs.docker.com/engine/reference/commandline/events/#object-types
+	/// </summary>
+	public string[] ContainerEvents { get; set; }
+	public string[] ImageEvents { get; set; }
+	public string[] PluginEvents { get; set; }
+	public string[] VolumeEvents { get; set; }
+	public string[] DaemonEvents { get; set; }
+	public string[] ServiceEvents { get; set; }
+	public string[] NodeEvents { get; set; }
+	public string[] SecretEvents { get; set; }
+	public string[] ConfigEvents { get; set; }
 }
 
 public class GrafanaConfig
 {
-	public string? ApiKey { get; set; }
-	public string? Host { get; set; }
+	public GrafanaConfig()
+    {
+		ApiKey = string.Empty;
+		Uri = "http://localhost:3000";
+	}
+
+	public string ApiKey { get; set; }
+	public string Uri { get; set; }
 }
 
 public class ObservabilityConfig

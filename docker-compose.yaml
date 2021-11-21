@@ -17,6 +17,5 @@ services:
     restart: unless-stopped 
     environment: 
       - TZ=America/Chicago
-      - CONTAINERS=1
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock:ro
