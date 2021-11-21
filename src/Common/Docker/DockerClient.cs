@@ -132,10 +132,11 @@ public class DockerClient : IDockerClientWrapper
 
         if (!shouldRecord) return;
 
+        var name = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, "name", StringComparison.OrdinalIgnoreCase)).Value;
         var imageName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageNameKey, StringComparison.OrdinalIgnoreCase)).Value;
         var imageTag = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageVersionKey, StringComparison.OrdinalIgnoreCase)).Value;
 
-        var annotation = $"{message.Action} {imageName}:{imageTag}";
+        var annotation = $"{message.Action} {name} {imageName}:{imageTag}";
 
         _grafanaClient.CreateAnnotationAsync(message.TimeNano, annotation, annotationType, message.Action, message.From)
             .GetAwaiter().GetResult();
