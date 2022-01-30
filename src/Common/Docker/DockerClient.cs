@@ -89,77 +89,90 @@ public class DockerClient : IDockerClientWrapper
 		_logger.Verbose("New event: {@Id} {@Action} {@From} {@Actor} {@Scope} {@Status} {@Type} {@Time}",
 						message.ID, message.Action, message.From, message.Actor, message.Scope, message.Status, message.Type, message.Time);
 
-		var shouldRecord = false;
-		var messageType = message.Type;
-
-		if (string.Equals(messageType, Constants.ContainerEventTypeValue, StringComparison.OrdinalIgnoreCase) 
-			&& _containerActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.ContainerEventType;
-
-		} else if (string.Equals(messageType, Constants.ImageEventTypeValue, StringComparison.OrdinalIgnoreCase) 
-			&& _imageActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.ImageEventType;
-
-		} else if (string.Equals(messageType, Constants.PluginEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _pluginActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.PluginEventType;
-
-		} else if (string.Equals(messageType, Constants.VolumeEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _volumeActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.VolumeEventType;
-
-		} else if (string.Equals(messageType, Constants.DaemonEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _daemonActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.DaemonEventType;
-
-		} else if (string.Equals(messageType, Constants.ServiceEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _serviceActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.ServiceEventType;
-
-		} else if (string.Equals(messageType, Constants.NodeEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _nodeActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.NodeEventType;
-
-		} else if (string.Equals(messageType, Constants.ServiceEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _secretActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.SecretEventType;
-
-		} else if (string.Equals(messageType, Constants.ConfigEventTypeValue, StringComparison.OrdinalIgnoreCase)
-		   && _configActionsToRecord.Contains(message.Action))
-		{
-			shouldRecord = true;
-			messageType = Grafana.Constants.ConfigEventType;
-		}
+		var action = CleanAction(message.Action);
+		var shouldRecord = ShouldRecordToGrafana(action);
+		var messageType = MapToGrafanaEventType(message.Type);
 
 		var containerName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, "name", StringComparison.OrdinalIgnoreCase)).Value;
 		var imageName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageNameKey, StringComparison.OrdinalIgnoreCase)).Value;
 		var imageTag = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageVersionKey, StringComparison.OrdinalIgnoreCase)).Value;
 
-		DockerEventsReceived.WithLabels(messageType, message.Action, containerName, imageName, imageTag ?? "latest").Inc();
+		DockerEventsReceived.WithLabels(messageType, action, containerName, imageName, imageTag ?? "latest").Inc();
 
 		if (!shouldRecord) return;
 
-		DockerEventsRecorded.WithLabels(messageType, message.Action, containerName, imageName, imageTag ?? "latest").Inc();
+		DockerEventsRecorded.WithLabels(messageType, action, containerName, imageName, imageTag ?? "latest").Inc();
 
-		var annotation = $"{message.Action} {containerName} {imageTag}";
+		var annotation = $"{action} {containerName} {imageTag}";
 
-		_grafanaClient.CreateAnnotationAsync(message.TimeNano, annotation, messageType, message.Action, containerName, imageName)
+		_grafanaClient.CreateAnnotationAsync(message.TimeNano, annotation, messageType, action, containerName, imageName)
 			.GetAwaiter().GetResult();
+	}
+
+	private string MapToGrafanaEventType(string messageType)
+	{
+		if (string.Equals(messageType, Constants.ContainerEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.ContainerEventType;
+
+		} else if (string.Equals(messageType, Constants.ImageEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.ImageEventType;
+
+		} else if (string.Equals(messageType, Constants.PluginEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.PluginEventType;
+
+		} else if (string.Equals(messageType, Constants.VolumeEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.VolumeEventType;
+
+		} else if (string.Equals(messageType, Constants.DaemonEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.DaemonEventType;
+
+		} else if (string.Equals(messageType, Constants.ServiceEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.ServiceEventType;
+
+		} else if (string.Equals(messageType, Constants.NodeEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.NodeEventType;
+
+		} else if (string.Equals(messageType, Constants.ServiceEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.SecretEventType;
+
+		} else if (string.Equals(messageType, Constants.ConfigEventTypeValue, StringComparison.OrdinalIgnoreCase))
+		{
+			return Grafana.Constants.ConfigEventType;
+		}
+
+		_logger.Information($"Found unhandled message type: {messageType}");
+		return messageType;
+	}
+
+	private bool ShouldRecordToGrafana(string action)
+	{
+		if (_containerActionsToRecord.Contains(action)
+			|| _imageActionsToRecord.Contains(action)
+			|| _pluginActionsToRecord.Contains(action)
+			|| _volumeActionsToRecord.Contains(action)
+			|| _daemonActionsToRecord.Contains(action)
+			|| _serviceActionsToRecord.Contains(action)
+			|| _nodeActionsToRecord.Contains(action)
+			|| _secretActionsToRecord.Contains(action)
+			|| _configActionsToRecord.Contains(action))
+		{
+			return true;
+
+		}
+
+		return false;
+	}
+	
+	private string CleanAction(string action)
+	{
+		return action.Split(":").FirstOrDefault() ?? action;
 	}
 }
