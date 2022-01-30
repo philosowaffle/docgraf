@@ -53,7 +53,7 @@ public static class FlurlConfiguration
 		{
 			var response = string.Empty;
 			if (call.HttpResponseMessage is object)
-				response = await call.HttpResponseMessage?.Content?.ReadAsStringAsync();
+				response = await call?.HttpResponseMessage?.Content?.ReadAsStringAsync();
 			Log.Error("Http Call Failed. {@HttpStatusCode} {@Content}", call.HttpResponseMessage?.StatusCode, response);
 		};
 
