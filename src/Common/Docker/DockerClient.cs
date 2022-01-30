@@ -151,11 +151,11 @@ public class DockerClient : IDockerClientWrapper
 		var imageName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageNameKey, StringComparison.OrdinalIgnoreCase)).Value;
 		var imageTag = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageVersionKey, StringComparison.OrdinalIgnoreCase)).Value;
 
-		DockerEventsReceived.WithLabels(messageType, message.Action, containerName, imageName, imageTag ).Inc();
+		DockerEventsReceived.WithLabels(messageType, message.Action, containerName, imageName, imageTag ?? "latest").Inc();
 
 		if (!shouldRecord) return;
 
-		DockerEventsRecorded.WithLabels(messageType, message.Action, containerName, imageName, imageTag).Inc();
+		DockerEventsRecorded.WithLabels(messageType, message.Action, containerName, imageName, imageTag ?? "latest").Inc();
 
 		var annotation = $"{message.Action} {containerName} {imageTag}";
 
