@@ -71,6 +71,12 @@ public static class Metrics
 		public static string OsVersion = "os_version";
 		public static string Version = "version";
 		public static string DotNetRuntime = "dotnet_runtime";
+
+		public static string DockerEventType = "event_type";
+		public static string DockerEvent = "event";
+		public static string DockerContainer = "container";
+		public static string DockerImage = "image";
+		public static string DockerImageTag = "image_tag";
 	}
 
 	public static class HealthStatus

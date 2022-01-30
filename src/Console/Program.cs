@@ -18,7 +18,7 @@ host.RunAsync();
 
 static IHostBuilder CreateHostBuilder(string[] args)
 {
-    return Host.CreateDefaultBuilder(args)
+	return Host.CreateDefaultBuilder(args)
 		.ConfigureAppConfiguration(configBuilder =>
 		{
 			configBuilder.Sources.Clear();
