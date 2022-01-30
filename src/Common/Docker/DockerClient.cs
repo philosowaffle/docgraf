@@ -93,15 +93,15 @@ public class DockerClient : IDockerClientWrapper
 		var shouldRecord = ShouldRecordToGrafana(action);
 		var messageType = MapToGrafanaEventType(message.Type);
 
-		var containerName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, "name", StringComparison.OrdinalIgnoreCase)).Value;
-		var imageName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageNameKey, StringComparison.OrdinalIgnoreCase)).Value;
-		var imageTag = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageVersionKey, StringComparison.OrdinalIgnoreCase)).Value;
+		var containerName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, "name", StringComparison.OrdinalIgnoreCase)).Value ?? "unknown";
+		var imageName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageNameKey, StringComparison.OrdinalIgnoreCase)).Value ?? "unknown";
+		var imageTag = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageVersionKey, StringComparison.OrdinalIgnoreCase)).Value ?? "latest";
 
-		DockerEventsReceived.WithLabels(messageType, action, containerName, imageName, imageTag ?? "latest").Inc();
+		DockerEventsReceived.WithLabels(messageType, action, containerName, imageName, imageTag).Inc();
 
 		if (!shouldRecord) return;
 
-		DockerEventsRecorded.WithLabels(messageType, action, containerName, imageName, imageTag ?? "latest").Inc();
+		DockerEventsRecorded.WithLabels(messageType, action, containerName, imageName, imageTag).Inc();
 
 		var annotation = $"{action} {containerName} {imageTag}";
 
@@ -111,6 +111,12 @@ public class DockerClient : IDockerClientWrapper
 
 	private string MapToGrafanaEventType(string messageType)
 	{
+		if (string.IsNullOrEmpty(messageType))
+		{
+			_logger.Information($"Found null/empty message type.");
+			return "null";
+		}
+
 		if (string.Equals(messageType, Constants.ContainerEventTypeValue, StringComparison.OrdinalIgnoreCase))
 		{
 			return Grafana.Constants.ContainerEventType;
@@ -173,6 +179,12 @@ public class DockerClient : IDockerClientWrapper
 	
 	private string CleanAction(string action)
 	{
+		if (string.IsNullOrEmpty(action))
+		{
+			_logger.Information($"Found null/empty action.");
+			return "null";
+		}
+
 		return action.Split(":").FirstOrDefault() ?? action;
 	}
 }
