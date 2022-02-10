@@ -48,7 +48,7 @@ internal class Startup : BackgroundService
 		return RunAsync(cancelToken);
 	}
 
-	private Task RunAsync(CancellationToken cancelToken)
+	private async Task RunAsync(CancellationToken cancelToken)
 	{
 		using var metrics = Metrics.EnableMetricsServer(_config.Observability.Prometheus);
 		using var metricsCollector = Metrics.EnableCollector(_config.Observability.Prometheus);
@@ -57,16 +57,14 @@ internal class Startup : BackgroundService
 
 		try
 		{
-			_dockerClient.BeginEventMonitoringAsync();
-
-			while (!cancelToken.IsCancellationRequested) { }
-
-			return Task.CompletedTask;
+			while (!cancelToken.IsCancellationRequested) 
+			{ 
+				await _dockerClient.BeginEventMonitoringAsync(cancelToken);
+			}
 
 		} catch (Exception ex)
 		{
 			_logger.Fatal(ex, "RunAsync failed.");
-			return Task.CompletedTask;
 
 		} finally
 		{

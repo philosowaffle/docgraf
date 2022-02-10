@@ -11,7 +11,7 @@ namespace Common.Docker;
 
 public interface IDockerClientWrapper
 {
-	Task BeginEventMonitoringAsync();
+	Task BeginEventMonitoringAsync(CancellationToken cancelToken);
 	void EventHandler(Message message);
 }
 
@@ -57,11 +57,11 @@ public class DockerClient : IDockerClientWrapper
 		_configActionsToRecord = config.Docker.ConfigEvents.ToHashSet();
 	}
 
-	public Task BeginEventMonitoringAsync()
+	public Task BeginEventMonitoringAsync(CancellationToken cancelToken)
 	{
 		try
 		{
-			return _client.System.MonitorEventsAsync(new ContainerEventsParameters(), new Progress<Message>(EventHandler), CancellationToken.None);
+			return _client.System.MonitorEventsAsync(new ContainerEventsParameters(), new Progress<Message>(EventHandler), cancelToken);
 		} catch (Exception ex)
 		{
 			_logger.Error(ex, "Monitoring Docker events failed.");
