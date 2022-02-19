@@ -12,7 +12,7 @@ namespace Common.Docker;
 public interface IDockerClientWrapper
 {
 	Task BeginEventMonitoringAsync(CancellationToken cancelToken);
-	void EventHandler(Message message);
+	Task EventHandlerAsync(Message message);
 }
 
 public class DockerClient : IDockerClientWrapper
@@ -36,6 +36,20 @@ public class DockerClient : IDockerClientWrapper
 	private readonly HashSet<string> _nodeActionsToRecord;
 	private readonly HashSet<string> _secretActionsToRecord;
 	private readonly HashSet<string> _configActionsToRecord;
+
+	private static readonly IReadOnlyDictionary<string, string> DockerToGrafanaEventMapping = new Dictionary<string, string>() 
+	{
+		{ Constants.ContainerEventTypeValue, Grafana.Constants.ContainerEventType },
+		{ Constants.ImageEventTypeValue, Grafana.Constants.ImageEventType },
+		{ Constants.PluginEventTypeValue, Grafana.Constants.PluginEventType },
+		{ Constants.VolumeEventTypeValue, Grafana.Constants.VolumeEventType },
+		{ Constants.DaemonEventTypeValue, Grafana.Constants.DaemonEventType },
+		{ Constants.ServiceEventTypeValue, Grafana.Constants.ServiceEventType },
+		{ Constants.NodeEventTypeValue, Grafana.Constants.NodeEventType },
+		{ Constants.SecretEventTypeValue, Grafana.Constants.SecretEventType },
+		{ Constants.ConfigEventTypeValue, Grafana.Constants.ConfigEventType },
+		{ Constants.NetworkEventTypeValue, Grafana.Constants.NetworkEventType }
+	};
 
 	private readonly DockerDotNet.DockerClient _client;
 	private readonly IGrafanaClient _grafanaClient;
@@ -61,7 +75,7 @@ public class DockerClient : IDockerClientWrapper
 	{
 		try
 		{
-			return _client.System.MonitorEventsAsync(new ContainerEventsParameters(), new Progress<Message>(EventHandler), cancelToken);
+			return _client.System.MonitorEventsAsync(new ContainerEventsParameters(), new Progress<Message>(async (m) => await EventHandlerAsync(m)), cancelToken);
 		} catch (Exception ex)
 		{
 			_logger.Error(ex, "Monitoring Docker events failed.");
@@ -69,9 +83,9 @@ public class DockerClient : IDockerClientWrapper
 		}
 	}
 
-	public void EventHandler(Message message)
+	public Task EventHandlerAsync(Message message)
 	{
-		using var tracing = Observability.Tracing.Trace($"{nameof(DockerClient)}.{nameof(EventHandler)}")
+		using var tracing = Observability.Tracing.Trace($"{nameof(DockerClient)}.{nameof(EventHandlerAsync)}")
 							?.WithTag("docker.event.type", message.Type)
 							?.WithTag("docker.event.action", message.Action)
 							?.WithTag("docker.event.id", message.ID)
@@ -83,7 +97,7 @@ public class DockerClient : IDockerClientWrapper
 		if (message == null)
 		{
 			_logger.Warning("Docker Event Message was null.");
-			return;
+			return Task.CompletedTask;
 		}
 		
 		_logger.Verbose("New event: {@Id} {@Action} {@From} {@Actor} {@Scope} {@Status} {@Type} {@Time}",
@@ -93,20 +107,24 @@ public class DockerClient : IDockerClientWrapper
 		var shouldRecord = ShouldRecordToGrafana(action);
 		var messageType = MapToGrafanaEventType(message.Type);
 
-		var containerName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, "name", StringComparison.OrdinalIgnoreCase)).Value ?? "unknown";
-		var imageName = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageNameKey, StringComparison.OrdinalIgnoreCase)).Value ?? "unknown";
-		var imageTag = message.Actor.Attributes.FirstOrDefault(a => string.Equals(a.Key, Constants.ImageVersionKey, StringComparison.OrdinalIgnoreCase)).Value ?? "latest";
+		message.Actor.Attributes.TryGetValue(Constants.ContainerNameKey, out var containerName);
+		containerName = containerName ?? "unknown";
+
+		message.Actor.Attributes.TryGetValue(Constants.ImageNameKey, out var imageName);
+		imageName = imageName ?? "unknown";
+
+		message.Actor.Attributes.TryGetValue(Constants.ImageVersionKey, out var imageTag);
+		imageTag = imageTag ?? "unknown";
 
 		DockerEventsReceived.WithLabels(messageType, action, containerName, imageName, imageTag).Inc();
 
-		if (!shouldRecord) return;
+		if (!shouldRecord) return Task.CompletedTask;
 
 		DockerEventsRecorded.WithLabels(messageType, action, containerName, imageName, imageTag).Inc();
 
 		var annotation = $"{action} {containerName} {imageTag}";
 
-		_grafanaClient.CreateAnnotationAsync(message.TimeNano, annotation, messageType, action, containerName, imageName)
-			.GetAwaiter().GetResult();
+		return _grafanaClient.CreateAnnotationAsync(message.TimeNano, annotation, messageType, action, containerName, imageName);
 	}
 
 	private string MapToGrafanaEventType(string messageType)
@@ -117,42 +135,8 @@ public class DockerClient : IDockerClientWrapper
 			return "null";
 		}
 
-		if (string.Equals(messageType, Constants.ContainerEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.ContainerEventType;
-
-		} else if (string.Equals(messageType, Constants.ImageEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.ImageEventType;
-
-		} else if (string.Equals(messageType, Constants.PluginEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.PluginEventType;
-
-		} else if (string.Equals(messageType, Constants.VolumeEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.VolumeEventType;
-
-		} else if (string.Equals(messageType, Constants.DaemonEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.DaemonEventType;
-
-		} else if (string.Equals(messageType, Constants.ServiceEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.ServiceEventType;
-
-		} else if (string.Equals(messageType, Constants.NodeEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.NodeEventType;
-
-		} else if (string.Equals(messageType, Constants.ServiceEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.SecretEventType;
-
-		} else if (string.Equals(messageType, Constants.ConfigEventTypeValue, StringComparison.OrdinalIgnoreCase))
-		{
-			return Grafana.Constants.ConfigEventType;
-		}
+		if (DockerToGrafanaEventMapping.TryGetValue(messageType.ToLowerInvariant(), out var grafanaEventType))
+			return grafanaEventType;
 
 		_logger.Information($"Found unhandled message type: {messageType}");
 		return messageType;

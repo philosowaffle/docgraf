@@ -2,6 +2,7 @@
 
 internal class Constants
 {
+	public const string ContainerNameKey = "name";
     public const string ImageNameKey = "image";
     public const string ImageVersionKey = "org.opencontainers.image.version";
 
@@ -14,4 +15,5 @@ internal class Constants
     public const string NodeEventTypeValue = "node";
     public const string SecretEventTypeValue = "secret";
     public const string ConfigEventTypeValue = "config";
+	public const string NetworkEventTypeValue = "network";
 }

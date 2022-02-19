@@ -8,6 +8,8 @@ namespace Common.Http;
 
 public static class FlurlConfiguration
 {
+	private static readonly ILogger _logger = LogContext.ForStatic("Flurl");
+
 	public static readonly Prom.Histogram HttpRequestHistogram = PromMetrics.CreateHistogram($"{Metrics.Prefix}_http_duration_seconds", "The histogram of http requests.", new Prom.HistogramConfiguration
 	{
 		LabelNames = new[]
@@ -25,25 +27,38 @@ public static class FlurlConfiguration
 	{
 		Func<FlurlCall, Task> beforeCallAsync = (FlurlCall call) =>
 		{
-			Log.Verbose("HTTP Request: {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", 
+			_logger.Verbose("HTTP Request: {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", 
 				call.HttpRequestMessage.Method, call.HttpRequestMessage.RequestUri, call.HttpRequestMessage.Headers.ToString(), call.HttpRequestMessage.Content);
 			return Task.CompletedTask;
 		};
 
 		Func<FlurlCall, Task> afterCallAsync = async (FlurlCall call) =>
 		{
-			Log.Verbose("HTTP Response: {@HttpStatusCode} - {@HttpMethod} - {@Uri} - {@Headers} - {@Content}", 
-				call.HttpResponseMessage?.StatusCode, call.HttpRequestMessage?.Method?.ToString() ?? "null", call.HttpRequestMessage?.RequestUri?.ToString() ?? "null", call.HttpResponseMessage?.Headers.ToString() ?? "null", await call.HttpResponseMessage?.Content?.ReadAsStringAsync() ?? "null");
+			var method = call.HttpRequestMessage?.Method?.ToString() ?? "null";
+			var uri = call.HttpRequestMessage?.RequestUri?.ToString() ?? "null";
+			var headers = "null";
+			var content = "null";
+			var statusCode = "null";
+
+			if (call.HttpResponseMessage is object)
+			{
+				headers = call.HttpResponseMessage.Headers.ToString() ?? "null";
+				content = await call.HttpResponseMessage.Content.ReadAsStringAsync() ?? "null";
+				statusCode = ((int)call.HttpResponseMessage.StatusCode).ToString() ?? "null";
+			}
+
+			_logger.Verbose("HTTP Response: {@HttpStatusCode} - {@HttpMethod} - {@Uri} - {@Headers} - {@Content}",
+				statusCode, method, uri, headers, content);
 
 			if (config.Observability.Prometheus.Enabled)
 			{
 				HttpRequestHistogram
 				.WithLabels(
-					call.HttpRequestMessage?.Method?.ToString() ?? "null",
-					call.HttpRequestMessage?.RequestUri?.Host ?? "null",
+					method,
+					uri,
 					call.HttpRequestMessage?.RequestUri?.AbsolutePath ?? "null",
 					call.HttpRequestMessage?.RequestUri?.Query ?? "null",
-					((int)call.HttpResponseMessage.StatusCode).ToString() ?? "null",
+					statusCode,
 					call.HttpResponseMessage?.ReasonPhrase ?? "null"
 				).Observe(call.Duration.GetValueOrDefault().TotalSeconds);
 			}
@@ -53,8 +68,8 @@ public static class FlurlConfiguration
 		{
 			var response = string.Empty;
 			if (call.HttpResponseMessage is object)
-				response = await call?.HttpResponseMessage?.Content?.ReadAsStringAsync();
-			Log.Error("Http Call Failed. {@HttpStatusCode} {@Content}", call.HttpResponseMessage?.StatusCode, response);
+				response = await call.HttpResponseMessage.Content.ReadAsStringAsync();
+			_logger.Error("Http Call Failed. {@HttpStatusCode} {@Content}", call.HttpResponseMessage?.StatusCode, response);
 		};
 
 		FlurlHttp.Configure(settings =>

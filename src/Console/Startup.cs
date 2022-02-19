@@ -37,9 +37,9 @@ internal class Startup : BackgroundService
 		var version = versionInfo.ProductVersion ?? "unknown";
 
 		BuildInfo.WithLabels(version, os, osVersion, runtimeVersion).Set(1);
-		Log.Debug("App Version: {@Version}", version);
-		Log.Debug("Operating System: {@Os}", osVersion);
-		Log.Debug("DotNet Runtime: {@DotnetRuntime}", runtimeVersion);
+		_logger.Debug("App Version: {@Version}", version);
+		_logger.Debug("Operating System: {@Os}", osVersion);
+		_logger.Debug("DotNet Runtime: {@DotnetRuntime}", runtimeVersion);
 	}
 
 	protected override Task ExecuteAsync(CancellationToken cancelToken)

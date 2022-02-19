@@ -10,4 +10,5 @@ internal class Constants
     public const string NodeEventType = "docker_node_event";
     public const string SecretEventType = "docker_secret_event";
     public const string ConfigEventType = "docker_config_event";
+    public const string NetworkEventType = "docker_network_event";
 }

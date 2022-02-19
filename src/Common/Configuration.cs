@@ -119,13 +119,5 @@ public class Prometheus
 
 public class Developer
 {
-	public string? UserAgent { get; set; }
-}
-
-public enum UploadStrategy
-{
-	PythonAndGuploadInstalledLocally = 0,
-	WindowsExeBundledPython = 1,
-	NativeImplV1 = 2
 }
 

@@ -16,7 +16,7 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc8" />
     <PackageReference Include="prometheus-net" Version="5.0.2" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="5.0.2" />
-    <PackageReference Include="prometheus-net.DotNetRuntime" Version="4.2.2" />
+    <PackageReference Include="prometheus-net.DotNetRuntime" Version="4.2.3" />
     <PackageReference Include="Serilog" Version="2.10.0" />
   </ItemGroup>
 
