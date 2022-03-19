@@ -1,12 +1,13 @@
 # Create final image base
-FROM mcr.microsoft.com/dotnet/runtime:6.0 AS final
+FROM mcr.microsoft.com/dotnet/runtime:6.0-alpine AS final
 WORKDIR /app
 
-RUN apt-get update
-RUN apt-get -y install bash
+#RUN apt-get update
+RUN apk update
+RUN apk add bash
 
 # Create build image
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 
 ARG TARGETPLATFORM
 ARG VERSION
