@@ -1,16 +1,26 @@
+# Create final image base
+FROM mcr.microsoft.com/dotnet/runtime:6.0 AS final
+WORKDIR /app
+
+RUN apt-get update
+RUN apt-get -y install bash
+
+# Create build image
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-
-COPY . /build
-WORKDIR /build
-
-SHELL ["/bin/bash", "-c"]
 
 ARG TARGETPLATFORM
 ARG VERSION
 
 RUN echo $TARGETPLATFORM
 RUN echo $VERSION
+
 ENV VERSION=${VERSION}
+
+COPY . /build
+WORKDIR /build
+RUN ls -la
+
+SHELL ["/bin/bash", "-c"]
 
 ###################
 # BUILD CONSOLE APP
@@ -24,12 +34,7 @@ RUN if [[ "$TARGETPLATFORM" = "linux/arm64" ]] ; then \
 ###################
 # FINAL
 ###################
-FROM mcr.microsoft.com/dotnet/runtime:6.0
-
-RUN apt-get update
-RUN apt-get -y install bash
-
-WORKDIR /app
+FROM final
 
 COPY --from=build /build/published .
 COPY --from=build /build/LICENSE ./LICENSE

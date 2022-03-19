@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
 	<VersionPrefix>1.0.1</VersionPrefix>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-	<DockerfileContext>..\..</DockerfileContext>
+	<DockerfileContext>.</DockerfileContext>
 	<DockerfileFile>../../Dockerfile</DockerfileFile>
 	<DockerfileRunArguments>-v $(pwd)/configuration.local.json:/app/configuration.local.json:ro</DockerfileRunArguments>
   </PropertyGroup>

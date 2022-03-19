@@ -9,8 +9,7 @@
       "distributionName": ""
     },
     "Docker": {
-      "commandName": "Docker",
-      "DockerfileRunArguments": "--build-arg VERSION=0.0"
+      "commandName": "Docker"
     }
   }
 }
