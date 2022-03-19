@@ -3,8 +3,11 @@ FROM mcr.microsoft.com/dotnet/runtime:6.0 AS final
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
-	bash
-	&& rm -rf /var/lib/apt/lists/*
+	bash \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& useradd docgraf
+
+USER docgraf
 
 # Create build image
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
