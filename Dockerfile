@@ -1,16 +1,12 @@
 # Create final image base
-FROM mcr.microsoft.com/dotnet/runtime:6.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/runtime:6.0 AS final
 WORKDIR /app
 
-#RUN apt-get update
-RUN apk update
-RUN apk add bash libc6-compat
+RUN apt-get update
+RUN apt-get -y install bash
 
 # Create build image
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
-
-RUN apk update
-RUN apk add bash
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 ARG TARGETPLATFORM
 ARG VERSION
@@ -22,7 +18,7 @@ ENV VERSION=${VERSION}
 
 COPY . /build
 WORKDIR /build
-RUN ls -la
+
 
 SHELL ["/bin/bash", "-c"]
 
@@ -34,7 +30,6 @@ RUN if [[ "$TARGETPLATFORM" = "linux/arm64" ]] ; then \
 	else \
 		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-x64 -o /build/published ; \
 	fi
-
 ###################
 # FINAL
 ###################
@@ -44,6 +39,7 @@ COPY --from=build /build/published .
 COPY --from=build /build/LICENSE ./LICENSE
 COPY --from=build /build/configuration.example.json ./configuration.local.json
 COPY ./entrypoint.sh .
+
 RUN chmod 777 entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
