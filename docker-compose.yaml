@@ -9,7 +9,7 @@ services:
     environment:
       - TZ=America/Chicago
     volumes:
-      - ./configuration.local.json:/app/configuration.local.json
+      - ./configuration.local.json:/app/configuration.local.json:ro
 
   docker-proxy: 
     image: tecnativa/docker-socket-proxy

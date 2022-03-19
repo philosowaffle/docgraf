@@ -7,8 +7,6 @@ RUN apt-get update && apt-get install -y \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& useradd docgraf
 
-USER docgraf
-
 # Create build image
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
@@ -40,12 +38,14 @@ RUN echo $TARGETPLATFORM \
 ###################
 FROM final
 
+USER docgraf
+
 COPY --from=build /build/published .
 COPY --from=build /build/LICENSE ./LICENSE
 COPY --from=build /build/configuration.example.json ./configuration.local.json
 COPY ./entrypoint.sh .
 
-RUN chmod 777 entrypoint.sh
+RUN chmod 770 entrypoint.sh
 
 EXPOSE 4000
 
