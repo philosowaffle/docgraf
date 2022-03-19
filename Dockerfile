@@ -30,9 +30,9 @@ SHELL ["/bin/bash", "-c"]
 # BUILD CONSOLE APP
 ###################
 RUN if [[ "$TARGETPLATFORM" = "linux/arm64" ]] ; then \
-		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-arm64 --self-contained false -o /build/published ; \
+		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-arm64 -o /build/published ; \
 	else \
-		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-x64 --self-contained false -o /build/published ; \
+		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-x64 -o /build/published ; \
 	fi
 
 ###################
