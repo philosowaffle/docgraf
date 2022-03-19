@@ -4,7 +4,7 @@ WORKDIR /app
 
 #RUN apt-get update
 RUN apk update
-RUN apk add bash
+RUN apk add bash libc6-compat
 
 # Create build image
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
@@ -30,9 +30,9 @@ SHELL ["/bin/bash", "-c"]
 # BUILD CONSOLE APP
 ###################
 RUN if [[ "$TARGETPLATFORM" = "linux/arm64" ]] ; then \
-		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-arm64 -o /build/published ; \
+		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-arm64 --self-contained false -o /build/published ; \
 	else \
-		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-x64 -o /build/published ; \
+		dotnet publish /build/src/Console/Console.csproj -c Release -r linux-x64 --self-contained false -o /build/published ; \
 	fi
 
 ###################
