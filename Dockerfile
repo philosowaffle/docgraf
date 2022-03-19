@@ -4,8 +4,7 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
 	bash \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& useradd docgraf
+	&& rm -rf /var/lib/apt/lists/*
 
 # Create build image
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
@@ -37,8 +36,6 @@ RUN echo $TARGETPLATFORM \
 # FINAL
 ###################
 FROM final
-
-USER docgraf
 
 COPY --from=build /build/published .
 COPY --from=build /build/LICENSE ./LICENSE

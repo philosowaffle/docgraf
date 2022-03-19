@@ -25,6 +25,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github_actions", "github_actions", "{B89388A6-474A-4040-ADC7-F6EE1E1F4B09}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\docker_latest.yml = ..\.github\workflows\docker_latest.yml
+		..\.github\workflows\pr-test.yml = ..\.github\workflows\pr-test.yml
+		..\.github\workflows\tag-release.yml = ..\.github\workflows\tag-release.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
