@@ -9,6 +9,9 @@ RUN apk add bash
 # Create build image
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
 
+RUN apk update
+RUN apk add bash
+
 ARG TARGETPLATFORM
 ARG VERSION
 
