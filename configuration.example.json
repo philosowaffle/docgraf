@@ -13,7 +13,7 @@
 
   "Observability": {
 
-    "Prometheus": {
+    "Metrics": {
       "Enabled": false,
       "Port": 4000
     },
