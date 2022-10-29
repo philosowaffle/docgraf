@@ -2,19 +2,9 @@
 
 namespace Common;
 
-public interface IAppConfiguration
-{
-	App App { get; set; }
-	DockerConfig Docker { get; set; }
-	GrafanaConfig Grafana { get; set; }
-
-	ObservabilityConfig Observability { get; set; }
-	Developer Developer { get; set; }
-}
-
 public static class ConfigurationSetup
 {
-	public static void LoadConfigValues(IConfiguration provider, IAppConfiguration config)
+	public static void LoadConfigValues(IConfiguration provider, Configuration config)
 	{
 		provider.GetSection(nameof(App)).Bind(config.App);
 		provider.GetSection("Docker").Bind(config.Docker);
@@ -24,7 +14,7 @@ public static class ConfigurationSetup
 	}
 }
 
-public class Configuration : IAppConfiguration
+public class Configuration
 {
 	public Configuration()
 	{

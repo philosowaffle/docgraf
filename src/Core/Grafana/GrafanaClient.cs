@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Observability;
+using Core.Settings;
 using Flurl.Http;
 using Serilog;
 using Traces = Common.Observability.Traces;
@@ -18,8 +19,9 @@ public class GrafanaClient : IGrafanaClient
 	private readonly string Uri;
 	private readonly string ApiKey;
 
-	public GrafanaClient(IAppConfiguration configuration)
+	public GrafanaClient(ISettingsService settingsService)
 	{
+		var configuration = settingsService.GetSettingsAsync().GetAwaiter().GetResult();
 		Uri = configuration.Grafana.Uri;
 		ApiKey = configuration.Grafana.ApiKey;
 	}

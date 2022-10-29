@@ -1,6 +1,7 @@
 ﻿using Common;
 using Common.Observability;
 using Core.Grafana;
+using Core.Settings;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Prometheus;
@@ -55,9 +56,12 @@ public class DockerClient : IDockerClientWrapper
 	private readonly DockerDotNet.DockerClient _client;
 	private readonly IGrafanaClient _grafanaClient;
 
-	public DockerClient(IAppConfiguration config, IGrafanaClient grafanaClient)
+	public DockerClient(ISettingsService settingsService, IGrafanaClient grafanaClient)
 	{
 		_grafanaClient = grafanaClient;
+
+		var config = settingsService.GetSettingsAsync().GetAwaiter().GetResult();
+
 		_client = new DockerClientConfiguration(new Uri(config.Docker.Uri))
 									.CreateClient();
 
