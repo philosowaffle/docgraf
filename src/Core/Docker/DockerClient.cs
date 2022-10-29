@@ -161,6 +161,7 @@ public class DockerClient : IDockerClientWrapper
 	{
 		using var tracing = Traces.Trace($"{nameof(DockerClient)}.{nameof(ShouldRecordToGrafana)}");
 
+		var shouldRecord = false;
 		if (_containerActionsToRecord.Contains(action)
 			|| _imageActionsToRecord.Contains(action)
 			|| _pluginActionsToRecord.Contains(action)
@@ -170,9 +171,10 @@ public class DockerClient : IDockerClientWrapper
 			|| _nodeActionsToRecord.Contains(action)
 			|| _secretActionsToRecord.Contains(action)
 			|| _configActionsToRecord.Contains(action))
-			return true;
+			shouldRecord = true;
 
-		return false;
+		tracing?.AddTag("docgraf.shouldRecordEvent", shouldRecord);
+		return shouldRecord;
 	}
 
 	private string CleanAction(string action)

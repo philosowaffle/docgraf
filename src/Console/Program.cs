@@ -15,7 +15,7 @@ using Serilog.Enrichers.Span;
 System.Console.WriteLine("Welcome! DocGraf is starting up...");
 
 Statics.AppType = Constants.ConsoleAppName;
-Statics.MetricPrefix = Constants.ConsoleAppName;
+Statics.MetricPrefix = "docgraf";
 Statics.TracingService = Constants.ConsoleAppName;
 
 using IHost host = CreateHostBuilder(args).Build();
