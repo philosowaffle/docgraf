@@ -2,29 +2,19 @@
 
 namespace Common;
 
-public interface IAppConfiguration
-{
-	App App { get; set; }
-	DockerConfig Docker { get; set; }
-	GrafanaConfig Grafana { get; set; }
-
-	ObservabilityConfig Observability { get; set; }
-	Developer Developer { get; set; }
-}
-
 public static class ConfigurationSetup
 {
-	public static void LoadConfigValues(IConfiguration provider, IAppConfiguration config)
+	public static void LoadConfigValues(IConfiguration provider, Configuration config)
 	{
 		provider.GetSection(nameof(App)).Bind(config.App);
-		provider.GetSection(nameof(Docker)).Bind(config.Docker);
-		provider.GetSection(nameof(Grafana)).Bind(config.Grafana);
+		provider.GetSection("Docker").Bind(config.Docker);
+		provider.GetSection("Grafana").Bind(config.Grafana);
 		provider.GetSection(nameof(Observability)).Bind(config.Observability);
 		provider.GetSection(nameof(Developer)).Bind(config.Developer);
 	}
 }
 
-public class Configuration : IAppConfiguration
+public class Configuration
 {
 	public Configuration()
 	{
@@ -53,7 +43,7 @@ public class App
 public class DockerConfig
 {
 	public DockerConfig()
-    {
+	{
 		Uri = "http://localhost:4243";
 		ContainerEvents = new string[] { "start", "stop", "restart" };
 		ImageEvents = new string[] { };
@@ -64,7 +54,7 @@ public class DockerConfig
 		NodeEvents = new string[] { };
 		SecretEvents = new string[] { };
 		ConfigEvents = new string[] { };
-    }
+	}
 
 	public string Uri { get; set; }
 	/// <summary>
@@ -84,7 +74,7 @@ public class DockerConfig
 public class GrafanaConfig
 {
 	public GrafanaConfig()
-    {
+	{
 		ApiKey = string.Empty;
 		Uri = "http://localhost:3000";
 	}
@@ -97,21 +87,26 @@ public class ObservabilityConfig
 {
 	public ObservabilityConfig()
 	{
-		Prometheus = new Prometheus();
+		Metrics = new Metrics();
 		Tracing = new Tracing();
 	}
 
-	public Prometheus Prometheus { get; set; }
+	public Metrics Metrics { get; set; }
 	public Tracing Tracing { get; set; }
 }
 
 public class Tracing
 {
+	public Tracing()
+	{
+		Url = "http://localhost";
+	}
+
 	public bool Enabled { get; set; }
-	public string? Url { get; set; }
+	public string Url { get; set; }
 }
 
-public class Prometheus
+public class Metrics
 {
 	public bool Enabled { get; set; }
 	public int? Port { get; set; }

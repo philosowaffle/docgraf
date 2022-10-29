@@ -1,12 +1,9 @@
 ﻿using Common;
-using Common.Docker;
-using Common.Http;
 using Common.Observability;
+using Core.Docker;
+using Core.Settings;
 using Microsoft.Extensions.Hosting;
-using Prometheus;
 using Serilog;
-using System.Diagnostics;
-using System.Reflection;
 using Metrics = Common.Observability.Metrics;
 
 namespace Console;
@@ -14,46 +11,53 @@ namespace Console;
 internal class Startup : BackgroundService
 {
 	private static readonly ILogger _logger = LogContext.ForClass<Startup>();
-	private static readonly Gauge BuildInfo = Prometheus.Metrics.CreateGauge($"{Metrics.Prefix}_build_info", "Build info for the running instance.", new GaugeConfiguration()
-	{
-		LabelNames = new[] { Metrics.Label.Version, Metrics.Label.Os, Metrics.Label.OsVersion, Metrics.Label.DotNetRuntime }
-	});
 
-	private IAppConfiguration _config;
+	private ISettingsService _settingsService;
 	private IDockerClientWrapper _dockerClient;
 
-	public Startup(IAppConfiguration configuration, IDockerClientWrapper dockerClient)
+	public Startup(ISettingsService settingsService, IDockerClientWrapper dockerClient)
 	{
-		_config = configuration;
+		_settingsService = settingsService;
 		_dockerClient = dockerClient;
 
-		FlurlConfiguration.Configure(_config);
-
-		var runtimeVersion = Environment.Version.ToString();
-		var os = Environment.OSVersion.Platform.ToString();
-		var osVersion = Environment.OSVersion.VersionString;
-		var assembly = Assembly.GetExecutingAssembly();
-		var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-		var version = versionInfo.ProductVersion ?? "unknown";
-
-		BuildInfo.WithLabels(version, os, osVersion, runtimeVersion).Set(1);
-		_logger.Debug("App Version: {@Version}", version);
-		_logger.Debug("Operating System: {@Os}", osVersion);
-		_logger.Debug("DotNet Runtime: {@DotnetRuntime}", runtimeVersion);
+		Traces.Source = new(Statics.TracingService);
+		Logging.LogSystemInformation();
 	}
 
-	protected override Task ExecuteAsync(CancellationToken cancelToken)
+	protected override async Task ExecuteAsync(CancellationToken cancelToken)
 	{
 		_logger.Verbose("Begin.");
-		return RunAsync(cancelToken);
+
+		try
+		{
+			var settings = await _settingsService.GetSettingsAsync();
+
+			Metrics.ValidateConfig(settings.Observability.Metrics);
+			Traces.ValidateConfig(settings.Observability.Tracing);
+
+		} catch (Exception ex)
+		{
+			_logger.Error(ex, "Exception during config validation. Please modify your configuration.local.json and relaunch the application.");
+			System.Console.ReadLine();
+			Environment.Exit(-1);
+		}
+
+		await RunAsync(cancelToken);
 	}
 
 	private async Task RunAsync(CancellationToken cancelToken)
 	{
-		using var metrics = Metrics.EnableMetricsServer(_config.Observability.Prometheus);
-		using var metricsCollector = Metrics.EnableCollector(_config.Observability.Prometheus);
-		using var tracing = Common.Observability.Tracing.EnableTracing(_config.Observability.Tracing);
-		using var tracingSource = new ActivitySource("ROOT");
+		int exitCode = 0;
+
+		var settings = await _settingsService.GetSettingsAsync();
+
+		Log.Information("*********************************************");
+		using var metrics = Metrics.EnableMetricsServer(settings.Observability.Metrics);
+		using var metricsCollector = Metrics.EnableCollector(settings.Observability.Metrics);
+		using var tracing = Traces.EnableConsoleTracing(settings.Observability.Tracing);
+		Log.Information("*********************************************");
+
+		Metrics.CreateAppInfo();
 
 		try
 		{
@@ -65,10 +69,12 @@ internal class Startup : BackgroundService
 		} catch (Exception ex)
 		{
 			_logger.Fatal(ex, "RunAsync failed.");
+			exitCode = -2;
 
 		} finally
 		{
 			_logger.Verbose("End.");
+			Environment.Exit(exitCode);
 		}
 	}
 }

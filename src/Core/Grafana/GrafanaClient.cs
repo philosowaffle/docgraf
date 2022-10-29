@@ -1,8 +1,11 @@
-﻿using Common.Observability;
+﻿using Common;
+using Common.Observability;
+using Core.Settings;
 using Flurl.Http;
 using Serilog;
+using Traces = Common.Observability.Traces;
 
-namespace Common.Grafana;
+namespace Core.Grafana;
 
 public interface IGrafanaClient
 {
@@ -16,21 +19,22 @@ public class GrafanaClient : IGrafanaClient
 	private readonly string Uri;
 	private readonly string ApiKey;
 
-	public GrafanaClient(IAppConfiguration configuration)
+	public GrafanaClient(ISettingsService settingsService)
 	{
+		var configuration = settingsService.GetSettingsAsync().GetAwaiter().GetResult();
 		Uri = configuration.Grafana.Uri;
 		ApiKey = configuration.Grafana.ApiKey;
 	}
 
 	public Task CreateAnnotationAsync(long nanoSinceEpoch, string message, string type, string action, string containerName, string image)
 	{
-		using var tracing = Observability.Tracing.Trace($"{nameof(GrafanaClient)}.{nameof(CreateAnnotationAsync)}");
+		using var tracing = Traces.Trace($"{nameof(GrafanaClient)}.{nameof(CreateAnnotationAsync)}");
 
 		var request = new PostAnnotationRequest()
 		{
 			Time = nanoSinceEpoch / 1_000_000, // nano epoch to milliseconds epoch
 			Text = message,
-			 Tags = new string[] { type, action, containerName, image }
+			Tags = new string[] { type, action, containerName, image }
 		};
 
 		return $"{Uri}/api/annotations"

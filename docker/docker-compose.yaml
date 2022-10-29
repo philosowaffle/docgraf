@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  docgraf:
+    image: philosowaffle/docgraf
+    container_name: docgraf
+    ports:
+      - 4000:4000 # metrics
+    environment:
+      - TZ=America/Chicago
+    volumes:
+      - ./configuration.local.json:/app/configuration.local.json:ro
+
+  docker-proxy: 
+    image: tecnativa/docker-socket-proxy
+    container_name: docker-proxy 
+    restart: unless-stopped 
+    environment: 
+      - TZ=America/Chicago
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
