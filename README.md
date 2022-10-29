@@ -8,7 +8,7 @@ Track [Docker Events](https://docs.docker.com/engine/reference/commandline/event
 
 * Configure which Docker Events to monitor
 * Expose Prometheus metrics for Docker Events
-* Events are tagged with for robust filtering and querying
+* Events are tagged with the following for robust filtering and querying
 	* Docker Event Type
 	* Docker Event
 	* Container
