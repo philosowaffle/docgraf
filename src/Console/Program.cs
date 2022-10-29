@@ -21,6 +21,8 @@ Statics.TracingService = Constants.ConsoleAppName;
 using IHost host = CreateHostBuilder(args).Build();
 await host.RunAsync();
 
+System.Console.WriteLine("Started.");
+
 static IHostBuilder CreateHostBuilder(string[] args)
 {
 	return Host.CreateDefaultBuilder(args)

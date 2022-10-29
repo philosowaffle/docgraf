@@ -3,7 +3,14 @@
 
 ## Features
 
+* Check for new version on startup
+
 ## Fixes
+
+* Memory Link from Tempo traces
 
 ## Changes
 
+* Refactor
+* Version bumps
+* Config: `Prometheus` section renamed to `Metrics`
