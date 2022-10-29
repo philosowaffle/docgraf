@@ -75,14 +75,14 @@ DocGraf supports publishing OpenTelemetry Metrics, Logs, and Trace. This section
 
 The Observability config section contains three main sub-sections:
 
-1. [Prometheus](#prometheus-config) - Metrics
+1. [Metrics](#prometheus-config) - Metrics
 1. [Jaeger](#jaeger-config) - Traces
 1. [Serilog](#serilog-config) - Logs
 
 ```json
 "Observability": {
 
-    "Prometheus": {
+    "Metrics": {
       "Enabled": false,
       "Port": 4000
     },
@@ -110,10 +110,10 @@ The Observability config section contains three main sub-sections:
   }
 ```
 
-### Prometheus Config
+### Metrics Config
 
 ```json
-"Prometheus": {
+"Metrics": {
       "Enabled": false,
       "Port": 4000
     }
@@ -126,13 +126,13 @@ The Observability config section contains three main sub-sections:
 
 If you are using Docker, ensure you have exposed the port from your container.
 
-#### Example Prometheus scraper config
+#### Example Metrics scraper config
 
 ```yaml
-- job_name: 'p2g'
+- job_name: 'docgraf'
     scrape_interval: 60s
     static_configs:
-      - targets: [<p2gIPaddress>:<p2gPort>]
+      - targets: [<docgrafIPaddress>:<docgrafPort>]
     tls_config:
       insecure_skip_verify: true
 ```
@@ -175,7 +175,7 @@ If you are using Docker, ensure you have exposed the port from your container.
             "labels": [
               {
                 "key": "app",
-                "value": "p2g"
+                "value": "docgraf"
               }
             ]
           }
