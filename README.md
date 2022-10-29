@@ -8,6 +8,12 @@ Track [Docker Events](https://docs.docker.com/engine/reference/commandline/event
 
 * Configure which Docker Events to monitor
 * Expose Prometheus metrics for Docker Events
+* Events are tagged with for robust filtering and querying
+	* Docker Event Type
+	* Docker Event
+	* Container
+	* Image
+	* Tag
 
 Head on over to the [Install](https://philosowaffle.github.io/docgraf/) page to get started!
 
