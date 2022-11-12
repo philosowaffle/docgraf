@@ -22,4 +22,4 @@ Both metrics expose the following labels:
 1. Image
 1. Image Tag
 
-![Grafana Metrics Example](https://github.com/philosowaffle/docgrag/raw/main/images/metrics_example.png?raw=true "Grafana Metrics Example")
+![Grafana Metrics Example](https://github.com/philosowaffle/docgraf/raw/main/images/metrics_example.png?raw=true "Grafana Metrics Example")
