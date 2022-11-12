@@ -6,19 +6,20 @@ nav_order: 0
 
 # Home
 
-Publish annotations to Grafana based on Docker Events.
+Track [Docker Events](https://docs.docker.com/engine/reference/commandline/events/) as [Annotations](https://grafana.com/docs/grafana/v9.0/dashboards/annotations/) on [Grafana](https://grafana.com/grafana/). 
 
-* Configure which events should create an Annotation
-* Events are tagged with Container, Event, and Type for easy filtering
+* Configure which Docker Events to monitor
+* Expose Prometheus metrics for Docker Events
+* Events are tagged with the following for robust filtering and querying
+	* Docker Event Type
+	* Docker Event
+	* Container
+	* Image
+	* Tag
 
 Head on over to the [Install]({{ site.baseurl }}{% link install/index.md %}) page to get started!
 
-## Supported Platforms
-
-* Windows
-* Mac
-* Linux
-* Docker
+![Docgraf Demo](https://github.com/philosowaffle/docgrag/raw/main/images/docgraf_demo.gif?raw=true "DocGraf Demo")
 
 ## Contributors
 
