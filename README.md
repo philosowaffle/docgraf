@@ -18,6 +18,7 @@ Track [Docker Events](https://docs.docker.com/engine/reference/commandline/event
 Head on over to the [Install](https://philosowaffle.github.io/docgraf/) page to get started!
 
 ![DocGraf Demo](/images/docgraf_demo.gif?raw=true "DocGraf Demo")
+(open image in new tab to view at full size)
 
 ## Contributors
 
