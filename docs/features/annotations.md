@@ -20,8 +20,8 @@ DocGraf can be [configured]({{ site.baseurl }}{% link configuration/index.md %}#
 
 These annotations can be visualized in several ways on Grafana such as a list of recent events:
 
-![Grafana Annotations List](https://github.com/philosowaffle/docgrag/raw/main/images/annotations_list.png?raw=true "Grafana Annotations List")
+![Grafana Annotations List](https://github.com/philosowaffle/docgraf/raw/main/images/annotation_list.png?raw=true "Grafana Annotations List")
 
 Or overlayed on top of other charts to correlate container events with out system metrics:
 
-![Annotation Overlay Demo](https://github.com/philosowaffle/docgrag/raw/main/images/annotation_overlay_demo.png?raw=true "Annotation Overlay Demo")
+![Annotation Overlay Demo](https://github.com/philosowaffle/docgraf/raw/main/images/annotation_overlay_demo.gif?raw=true "Annotation Overlay Demo")
