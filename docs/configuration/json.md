@@ -7,23 +7,17 @@ nav_order: 0
 
 # Json Config File
 
-This is the preferred way to provide configuration details to DocGraf.  By default, DocGraf looks for a file named `configuration.local.json` in the same directory where the program is run.
-
-The config file is written in JSON and supports hot-reload for all fields except the following:
-
-1. `Observability` Section
-
 The config file is organized into the below sections.
 
 | Section      | Description       |
 |:-------------|:------------------|
-| [Docker Config](#format-config) | This section provides settings related to Docker.  |
-| [Grafana Config](#peloton-config) | This section provides settings related to Grafana.      |
+| [Docker Config](#docker-config) | This section provides settings related to Docker.  |
+| [Grafana Config](#grafana-config) | This section provides settings related to Grafana.      |
 | [Observability Config](#observability-config) | This section provides settings related to Metrics, Logs, and Traces for monitoring purposes. |
 
 ## Docker Config
 
-This section provides settings related to connecting to the Docker daemon and which events should be acted on.
+This section provides settings related to connecting to the Docker daemon and which events should be published as Annotations to Grafana.
 
 ```json
 "Docker": {
@@ -55,11 +49,11 @@ This section provides settings related to connecting to the Docker daemon and wh
 
 ## Grafana Config
 
-This section provides settings related to connecting and publishing annotations to Grafana.
+This section provides settings related to connecting to Grafana.
 
 ```json
 "Grafana": {
-    "ApiKey":  "yourApiKey==",
+    "ApiKey": "yourApiKey==",
     "Uri": "http://grafana:3000"
   },
 ```
@@ -71,7 +65,7 @@ This section provides settings related to connecting and publishing annotations 
 
 ## Observability Config
 
-DocGraf supports publishing OpenTelemetry Metrics, Logs, and Trace. This section provides settings related to those pillars.
+DocGraf supports publishing OpenTelemetry Metrics, Logs, and Traces. This section provides settings related to those pillars.
 
 The Observability config section contains three main sub-sections:
 
@@ -133,8 +127,6 @@ If you are using Docker, ensure you have exposed the port from your container.
     scrape_interval: 60s
     static_configs:
       - targets: [<docgrafIPaddress>:<docgrafPort>]
-    tls_config:
-      insecure_skip_verify: true
 ```
 
 ### Tracing Config
@@ -156,7 +148,13 @@ If you are using Docker, ensure you have exposed the port from your container.
 ```json
 "Serilog": {
       "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File",  "Serilog.Sinks.Grafana.Loki" ],
-      "MinimumLevel": "Debug",
+      "MinimumLevel": {
+        "Default": "Information",
+        "Override": {
+          "Microsoft": "Error",
+          "System": "Error"
+        }
+      },
       "WriteTo": [
         { "Name": "Console" },
         {

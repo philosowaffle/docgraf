@@ -1,5 +1,5 @@
 title: DocGraf
-description: Publish annotations to Grafana based on Docker Events.
+description: Track Docker Events as Annotations on https://grafana.com/grafana/.
 repository: philosowaffle/docgraf
 locale: en_US
 

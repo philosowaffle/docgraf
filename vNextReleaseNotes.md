@@ -4,13 +4,15 @@
 ## Features
 
 * Check for new version on startup
+* Sample Grafana Dashboard provided in Repo
 
 ## Fixes
 
-* Memory Link from Tempo traces
+* Memory leak from Tempo traces
 
 ## Changes
 
 * Refactor
 * Version bumps
 * Config: `Prometheus` section renamed to `Metrics`
+* Updates to docs site

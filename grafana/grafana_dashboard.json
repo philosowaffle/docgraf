@@ -1,0 +1,2116 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "target": {
+            "limit": 100,
+            "matchAny": false,
+            "tags": [],
+            "type": "dashboard"
+          },
+          "type": "dashboard"
+        },
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "enable": true,
+          "iconColor": "blue",
+          "name": "Docker Container Events",
+          "target": {
+            "limit": 300,
+            "matchAny": false,
+            "tags": [
+              "docker_container_event",
+              "docgraf"
+            ],
+            "type": "tags"
+          }
+        }
+      ]
+    },
+    "description": "A starter Grafana dashboard for monitoring Docker Events",
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 77,
+    "links": [
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "GitHub",
+        "tooltip": "Got to GitHub",
+        "type": "link",
+        "url": "https://github.com/philosowaffle/docgraf"
+      },
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Docs",
+        "tooltip": "Docs site",
+        "type": "link",
+        "url": "https://philosowaffle.github.io/docgraf/"
+      },
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Forum",
+        "tooltip": "Forum",
+        "type": "link",
+        "url": "https://github.com/philosowaffle/docgraf/discussions"
+      },
+      {
+        "asDropdown": false,
+        "icon": "external link",
+        "includeVars": false,
+        "keepTime": false,
+        "tags": [],
+        "targetBlank": true,
+        "title": "Donate",
+        "tooltip": "Buy me a coffee",
+        "type": "link",
+        "url": "https://www.buymeacoffee.com/philosowaffle"
+      }
+    ],
+    "liveNow": false,
+    "panels": [
+      {
+        "collapsed": false,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 0
+        },
+        "id": 50,
+        "panels": [],
+        "title": "README",
+        "type": "row"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "BDhSj5Xnk"
+        },
+        "gridPos": {
+          "h": 12,
+          "w": 24,
+          "x": 0,
+          "y": 1
+        },
+        "id": 52,
+        "options": {
+          "code": {
+            "language": "plaintext",
+            "showLineNumbers": false,
+            "showMiniMap": false
+          },
+          "content": "# DocGraf Example Dashboard\n\n## Filters\n\nFilters can be applied to view different subsets of the data.\n\n* MetricSource - Your metrics Datasource\n* LogSrouce - Your logs Datasource\n* ContainerName - Filter for events for a given container\n* EventType - Filter by a specific EventType\n* Event - Filter by a specific Event\n* Image - Filter for events for a given image\n\n## Container Events Annotations\n\nA toggle is provided for displaying docker container events as annotations.",
+          "mode": "markdown"
+        },
+        "pluginVersion": "9.2.0",
+        "type": "text"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 13
+        },
+        "id": 30,
+        "panels": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 0,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "auto",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 0,
+              "y": 14
+            },
+            "id": 32,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "sum(irate(docgraf_docker_events_recv{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__rate_interval]))",
+                "interval": "",
+                "legendFormat": "Events Recv",
+                "range": true,
+                "refId": "A"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "sum(irate(docgraf_docker_events_recorded{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__rate_interval]))",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "Events Recorded",
+                "range": true,
+                "refId": "B"
+              }
+            ],
+            "title": "All Events",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 0,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "auto",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 9,
+              "w": 12,
+              "x": 12,
+              "y": 14
+            },
+            "id": 34,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "sum by(container) (irate(docgraf_docker_events_recv{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__rate_interval]))",
+                "interval": "",
+                "legendFormat": "{{ container }}",
+                "range": true,
+                "refId": "A"
+              }
+            ],
+            "title": "All Events by Container",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 0,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "auto",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 10,
+              "w": 12,
+              "x": 0,
+              "y": 23
+            },
+            "id": 36,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "code",
+                "exemplar": true,
+                "expr": "sum(irate(docgraf_docker_events_recv{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__rate_interval])) by (event_type)",
+                "interval": "",
+                "legendFormat": "{{ event_type}}",
+                "range": true,
+                "refId": "A"
+              }
+            ],
+            "title": "All Events by Event Type",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "BDhSj5Xnk"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 0,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "auto",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 10,
+              "w": 12,
+              "x": 12,
+              "y": 23
+            },
+            "id": 38,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "BDhSj5Xnk"
+                },
+                "editorMode": "code",
+                "exemplar": true,
+                "expr": "sum(irate(docgraf_docker_events_recv{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__rate_interval])) by (event)",
+                "interval": "",
+                "legendFormat": "{{ event}}",
+                "range": true,
+                "refId": "A"
+              }
+            ],
+            "title": "All Events by Event",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "description": "",
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  }
+                },
+                "decimals": 2,
+                "mappings": [],
+                "max": 100,
+                "min": 0,
+                "noValue": "0",
+                "unit": "short"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Events Received"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "blue",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Events Recorded"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "yellow",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 8,
+              "w": 4,
+              "x": 0,
+              "y": 33
+            },
+            "id": 40,
+            "interval": "10m",
+            "options": {
+              "displayLabels": [
+                "percent",
+                "name"
+              ],
+              "legend": {
+                "displayMode": "table",
+                "placement": "bottom",
+                "showLegend": true,
+                "values": [
+                  "percent"
+                ]
+              },
+              "pieType": "pie",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "",
+                "values": false
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "code",
+                "exemplar": false,
+                "expr": "sum(sum_over_time(docgraf_docker_events_recorded{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__interval]))",
+                "format": "time_series",
+                "instant": false,
+                "interval": "",
+                "legendFormat": "Events Recorded",
+                "range": true,
+                "refId": "A"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "code",
+                "exemplar": false,
+                "expr": "sum(sum_over_time(docgraf_docker_events_recv{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__interval])) \r\n- \r\nsum(sum_over_time(docgraf_docker_events_recorded{event_type=~\"$EventType\", event=~\"$Event\", image=~\"$Image\", container=~\"$ContainerName\"}[$__interval]))",
+                "format": "time_series",
+                "hide": false,
+                "instant": false,
+                "interval": "",
+                "legendFormat": "Events Received",
+                "range": true,
+                "refId": "B"
+              }
+            ],
+            "transparent": true,
+            "type": "piechart"
+          }
+        ],
+        "title": "Events",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 14
+        },
+        "id": 4,
+        "panels": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "bDGhbf8Gk"
+            },
+            "gridPos": {
+              "h": 12,
+              "w": 24,
+              "x": 0,
+              "y": 15
+            },
+            "id": 2,
+            "options": {
+              "limit": 100,
+              "navigateAfter": "10m",
+              "navigateBefore": "10m",
+              "navigateToPanel": false,
+              "onlyFromThisDashboard": false,
+              "onlyInTimeRange": false,
+              "showTags": true,
+              "showTime": true,
+              "showUser": false,
+              "tags": []
+            },
+            "title": "Events",
+            "type": "annolist"
+          }
+        ],
+        "title": "Event Annotations",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 15
+        },
+        "id": 6,
+        "panels": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "BDhSj5Xnk"
+            },
+            "gridPos": {
+              "h": 4,
+              "w": 18,
+              "x": 0,
+              "y": 16
+            },
+            "id": 8,
+            "options": {
+              "code": {
+                "language": "plaintext",
+                "showLineNumbers": false,
+                "showMiniMap": false
+              },
+              "content": "# DocGraf Service Monitoring\n",
+              "mode": "markdown"
+            },
+            "pluginVersion": "9.2.0",
+            "type": "text"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "fixedColor": "rgb(67, 113, 150)",
+                  "mode": "fixed"
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 2,
+              "w": 3,
+              "x": 18,
+              "y": 16
+            },
+            "id": 44,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "/^version$/",
+                "values": false
+              },
+              "text": {},
+              "textMode": "value"
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "exemplar": false,
+                "expr": "docgraf_build_info{}",
+                "format": "table",
+                "instant": true,
+                "interval": "",
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "Version",
+            "transparent": true,
+            "type": "stat"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "fixedColor": "rgb(67, 113, 150)",
+                  "mode": "fixed"
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 2,
+              "w": 3,
+              "x": 21,
+              "y": 16
+            },
+            "id": 48,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "/^dotnet_runtime$/",
+                "values": false
+              },
+              "text": {},
+              "textMode": "auto"
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "exemplar": false,
+                "expr": "docgraf_build_info{}",
+                "format": "table",
+                "instant": true,
+                "interval": "",
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "DotNet Runtime",
+            "transparent": true,
+            "type": "stat"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "fixedColor": "rgb(67, 113, 150)",
+                  "mode": "fixed"
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 2,
+              "w": 3,
+              "x": 18,
+              "y": 18
+            },
+            "id": 46,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "area",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "/^os_version$/",
+                "values": false
+              },
+              "text": {},
+              "textMode": "auto"
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "exemplar": false,
+                "expr": "docgraf_build_info{}",
+                "format": "table",
+                "instant": true,
+                "interval": "",
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "OS Version",
+            "transparent": true,
+            "type": "stat"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "fixedColor": "rgb(67, 113, 150)",
+                  "mode": "thresholds"
+                },
+                "mappings": [],
+                "noValue": "Down",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgba(144, 20, 20, 1)"
+                    },
+                    {
+                      "color": "rgb(67, 113, 150)",
+                      "value": 1
+                    }
+                  ]
+                },
+                "unit": "dtdurations"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 2,
+              "w": 3,
+              "x": 21,
+              "y": 18
+            },
+            "id": 42,
+            "options": {
+              "colorMode": "background",
+              "graphMode": "none",
+              "justifyMode": "center",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "",
+                "values": false
+              },
+              "text": {},
+              "textMode": "value"
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "exemplar": false,
+                "expr": "time() - process_start_time_seconds{job=\"docgraf\"}",
+                "hide": false,
+                "instant": true,
+                "interval": "",
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "Uptime",
+            "transparent": true,
+            "type": "stat"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${LogsSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 100,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "normal"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgb(67, 113, 150)"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "none"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "debug"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "yellow",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "error"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "dark-red",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "info"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "rgb(67, 113, 150)",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "warning"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "orange",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "critical"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "dark-purple",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "trace"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "dark-green",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 4,
+              "w": 10,
+              "x": 0,
+              "y": 20
+            },
+            "id": 12,
+            "interval": "1m",
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "8.0.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "${LogsSource}"
+                },
+                "editorMode": "code",
+                "expr": "sum by(level) (rate({container_name=\"docgraf\"} | json | __error__ != `JSONParserErr` [1m]))",
+                "legendFormat": "{{level}}",
+                "queryType": "range",
+                "refId": "A"
+              }
+            ],
+            "title": "Logs",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 88,
+                  "gradientMode": "opacity",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "auto",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "percentunit"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "CPU Process Secodns"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "rgb(67, 113, 150)",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 7,
+              "w": 14,
+              "x": 10,
+              "y": 20
+            },
+            "id": 16,
+            "interval": "2m",
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "8.0.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "code",
+                "exemplar": true,
+                "expr": "rate(process_cpu_seconds_total{job=\"docgraf\"}[$__interval])",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "{{instance}} CPU Process Seconds",
+                "range": true,
+                "refId": "B"
+              }
+            ],
+            "title": "CPU",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "loki",
+              "uid": "${LogsSource}"
+            },
+            "gridPos": {
+              "h": 16,
+              "w": 10,
+              "x": 0,
+              "y": 24
+            },
+            "id": 14,
+            "links": [],
+            "options": {
+              "dedupStrategy": "none",
+              "enableLogDetails": true,
+              "prettifyLogMessage": false,
+              "showCommonLabels": false,
+              "showLabels": false,
+              "showTime": true,
+              "sortOrder": "Descending",
+              "wrapLogMessage": true
+            },
+            "pluginVersion": "7.5.1",
+            "targets": [
+              {
+                "alias": "",
+                "bucketAggs": [
+                  {
+                    "id": "2",
+                    "settings": {
+                      "interval": "auto"
+                    },
+                    "type": "date_histogram"
+                  }
+                ],
+                "datasource": {
+                  "type": "loki",
+                  "uid": "${LogsSource}"
+                },
+                "editorMode": "builder",
+                "expr": "{container_name=\"docgraf\"}",
+                "metrics": [
+                  {
+                    "id": "1",
+                    "type": "count"
+                  }
+                ],
+                "query": "",
+                "queryType": "range",
+                "refId": "A",
+                "timeField": "@timestamp"
+              }
+            ],
+            "title": "Logs",
+            "transparent": true,
+            "type": "logs"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 89,
+                  "gradientMode": "hue",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineStyle": {
+                    "fill": "solid"
+                  },
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "log": 2,
+                    "type": "log"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": true,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "normal"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "bytes"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Process Virtual Memory Bytes"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "rgb(67, 113, 150)",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "Process Private Memory Bytes"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "red",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 7,
+              "w": 14,
+              "x": 10,
+              "y": 27
+            },
+            "id": 18,
+            "interval": "2m",
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "8.0.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "dotnet_total_memory_bytes{job=\"docgraf\"}",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "DotNet Total Memory Bytes",
+                "range": true,
+                "refId": "B"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "process_working_set_bytes{job=\"docgraf\"}",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "Process Working Set (RAM)",
+                "range": true,
+                "refId": "A"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "process_private_memory_bytes{job=\"docgraf\"}",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "Process Private Memory Bytes",
+                "range": true,
+                "refId": "C"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "process_virtual_memory_bytes{job=\"docgraf\"}",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "Process Virtual Memory Bytes",
+                "range": true,
+                "refId": "E"
+              }
+            ],
+            "title": "Memory",
+            "type": "timeseries"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "spanNulls": true,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "none"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "{instance=\"192.168.1.94:4051\", job=\"p2g\"}"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "rgb(67, 113, 150)",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 6,
+              "w": 14,
+              "x": 10,
+              "y": 34
+            },
+            "id": 20,
+            "interval": "2m",
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "pluginVersion": "8.0.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "increase(process_num_threads{job=\"docgraf\"}[$__interval])",
+                "hide": false,
+                "interval": "",
+                "legendFormat": "",
+                "range": true,
+                "refId": "B"
+              }
+            ],
+            "title": "Num Threads",
+            "type": "timeseries"
+          }
+        ],
+        "title": "DocGraf Service Monitoring",
+        "type": "row"
+      },
+      {
+        "collapsed": true,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "id": 22,
+        "panels": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${MetricSource}"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "mappings": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "red",
+                        "index": 0,
+                        "text": "Down"
+                      },
+                      "1": {
+                        "color": "rgb(67, 113, 150)",
+                        "index": 1,
+                        "text": "Up"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ],
+                "max": 1,
+                "min": 0,
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgb(67, 113, 150)"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                }
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 5,
+              "w": 3,
+              "x": 0,
+              "y": 17
+            },
+            "id": 24,
+            "options": {
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "",
+                "values": false
+              },
+              "showThresholdLabels": false,
+              "showThresholdMarkers": false,
+              "text": {}
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${MetricSource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "up{job=\"docgraf\"}",
+                "interval": "",
+                "legendFormat": "",
+                "range": true,
+                "refId": "A"
+              }
+            ],
+            "type": "gauge"
+          },
+          {
+            "datasource": {},
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "rgb(67, 113, 150)"
+                    }
+                  ]
+                },
+                "unit": "none"
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 5,
+              "w": 4,
+              "x": 3,
+              "y": 17
+            },
+            "id": 26,
+            "options": {
+              "colorMode": "value",
+              "graphMode": "none",
+              "justifyMode": "auto",
+              "orientation": "auto",
+              "reduceOptions": {
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "fields": "",
+                "values": false
+              },
+              "text": {},
+              "textMode": "auto"
+            },
+            "pluginVersion": "9.2.0",
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${Datasource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "scrape_samples_scraped{job=\"docgraf\"}",
+                "interval": "",
+                "legendFormat": "",
+                "range": true,
+                "refId": "A"
+              }
+            ],
+            "title": "Samples Scraped",
+            "type": "stat"
+          },
+          {
+            "datasource": {},
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "drawStyle": "line",
+                  "fillOpacity": 0,
+                  "gradientMode": "none",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "lineInterpolation": "linear",
+                  "lineWidth": 1,
+                  "pointSize": 5,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "auto",
+                  "spanNulls": false,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "mappings": [],
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green"
+                    },
+                    {
+                      "color": "red",
+                      "value": 80
+                    }
+                  ]
+                },
+                "unit": "s"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "{instance=\"192.168.1.94:4051\", job=\"p2g\"}"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "rgb(67, 113, 150)",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "gridPos": {
+              "h": 5,
+              "w": 17,
+              "x": 7,
+              "y": 17
+            },
+            "id": 28,
+            "options": {
+              "legend": {
+                "calcs": [],
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${Datasource}"
+                },
+                "editorMode": "builder",
+                "exemplar": true,
+                "expr": "irate(scrape_duration_seconds{job=\"docgraf\"}[$__rate_interval])",
+                "interval": "",
+                "legendFormat": "",
+                "range": true,
+                "refId": "A"
+              }
+            ],
+            "title": "Scrape Duration Seconds",
+            "type": "timeseries"
+          }
+        ],
+        "title": "Scrape Metrics",
+        "type": "row"
+      }
+    ],
+    "refresh": "30s",
+    "schemaVersion": 37,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "Mimir"
+            ],
+            "value": [
+              "Mimir"
+            ]
+          },
+          "hide": 0,
+          "includeAll": false,
+          "multi": true,
+          "name": "MetricSource",
+          "options": [],
+          "query": "prometheus",
+          "queryValue": "",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "type": "datasource"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "Loki"
+            ],
+            "value": [
+              "Loki"
+            ]
+          },
+          "hide": 0,
+          "includeAll": false,
+          "multi": true,
+          "name": "LogsSource",
+          "options": [],
+          "query": "loki",
+          "queryValue": "",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "type": "datasource"
+        },
+        {
+          "allValue": ".+",
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${MetricSource}"
+          },
+          "definition": "label_values(docgraf_docker_events_recv, container)",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "ContainerName",
+          "options": [],
+          "query": {
+            "query": "label_values(docgraf_docker_events_recv, container)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "allValue": ".+",
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${MetricSource}"
+          },
+          "definition": "label_values(docgraf_docker_events_recv, event_type)",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "EventType",
+          "options": [],
+          "query": {
+            "query": "label_values(docgraf_docker_events_recv, event_type)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "allValue": ".+",
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${MetricSource}"
+          },
+          "definition": "label_values(docgraf_docker_events_recv, event)",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "Event",
+          "options": [],
+          "query": {
+            "query": "label_values(docgraf_docker_events_recv, event)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        },
+        {
+          "allValue": ".+",
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${MetricSource}"
+          },
+          "definition": "label_values(docgraf_docker_events_recv, image)",
+          "hide": 0,
+          "includeAll": true,
+          "multi": true,
+          "name": "Image",
+          "options": [],
+          "query": {
+            "query": "label_values(docgraf_docker_events_recv, image)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "DocGraf",
+    "uid": "3mkyPBNVz",
+    "version": 22,
+    "weekStart": ""
+  }
