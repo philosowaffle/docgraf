@@ -20,6 +20,7 @@ Track [Docker Events](https://docs.docker.com/engine/reference/commandline/event
 Head on over to the [Install]({{ site.baseurl }}{% link install/index.md %}) page to get started!
 
 ![Docgraf Demo](https://github.com/philosowaffle/docgraf/raw/main/images/docgraf_demo.gif?raw=true "DocGraf Demo")
+(open image in new tab to view at full size)
 
 ## Contributors
 
