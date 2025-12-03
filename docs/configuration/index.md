@@ -23,3 +23,21 @@ For example, if you defined a setting ONLY in the Config file, then the Config f
 If you defined a setting in both the Config file AND the Environment variables, then the Environment variable setting will be used.
 
 If you defined a setting using all 3 methods (config file, env, and command line), then the setting provided via the command line will be used.
+
+
+## Ignoring Certain Containers
+
+DocGraf will ignore any containers that have the label `docgraf.ignore=true`.
+This may be useful for short-lived containers that run as part of cron jobs etc.
+This label can either be added using docker run:
+```bash
+docker run --label docgraf.ignore=true my_image
+```
+or via docker compose:
+```yaml
+services:
+    my_container:
+      image: my_image
+      labels:
+        docgraf.ignore: true 
+```
