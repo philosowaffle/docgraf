@@ -8,5 +8,6 @@ public static class Constants
 
 	public const string ConsoleAppName = "docgraf_console";
 
-	public const string AppVersion = "1.2.0-rc";
+	public const string AppVersion = "1.2.0";
 }
+
