@@ -112,7 +112,7 @@ public class DockerClient : IDockerClientWrapper
 							message.ID, message.Action, message.From, message.Actor, message.Scope, message.Status, message.Type, message.Time);
 
 			var action = CleanAction(message.Action);
-			var shouldRecord = ShouldRecordToGrafana(action);
+			var shouldRecord = ShouldRecordToGrafana(action, message.Actor.Attributes);
 			var messageType = MapToGrafanaEventType(message.Type);
 
 			message.Actor.Attributes.TryGetValue(Constants.ContainerNameKey, out var containerName);
@@ -157,12 +157,16 @@ public class DockerClient : IDockerClientWrapper
 		return messageType;
 	}
 
-	private bool ShouldRecordToGrafana(string action)
+	private bool ShouldRecordToGrafana(string action, IDictionary<string, string> actorAttributes)
 	{
 		using var tracing = Traces.Trace($"{nameof(DockerClient)}.{nameof(ShouldRecordToGrafana)}");
 
+		actorAttributes.TryGetValue(Constants.IgnoreLabelKey, out var ignoreLabel);
+		bool.TryParse(ignoreLabel, out var ignore);
+		
 		var shouldRecord = false;
-		if (_containerActionsToRecord.Contains(action)
+		if (!ignore && (
+			_containerActionsToRecord.Contains(action)
 			|| _imageActionsToRecord.Contains(action)
 			|| _pluginActionsToRecord.Contains(action)
 			|| _volumeActionsToRecord.Contains(action)
@@ -170,7 +174,8 @@ public class DockerClient : IDockerClientWrapper
 			|| _serviceActionsToRecord.Contains(action)
 			|| _nodeActionsToRecord.Contains(action)
 			|| _secretActionsToRecord.Contains(action)
-			|| _configActionsToRecord.Contains(action))
+			|| _configActionsToRecord.Contains(action)
+		))
 			shouldRecord = true;
 
 		tracing?.AddTag("docgraf.shouldRecordEvent", shouldRecord);

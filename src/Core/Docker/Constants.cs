@@ -16,4 +16,6 @@ internal class Constants
 	public const string SecretEventTypeValue = "secret";
 	public const string ConfigEventTypeValue = "config";
 	public const string NetworkEventTypeValue = "network";
+	
+	public const string IgnoreLabelKey = "docgraf.ignore";
 }
